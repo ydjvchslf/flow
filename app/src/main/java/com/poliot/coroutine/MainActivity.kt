@@ -4,11 +4,12 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import android.widget.Toast
+import androidx.lifecycle.*
 import com.poliot.coroutine.databinding.ActivityMainBinding
 import com.poliot.coroutine.util.DebugLog
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     // 전역 변수로 바인딩 객체 선언
@@ -29,6 +30,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    mainViewModel.currentValue.collect {
+                        DebugLog.d(logTag, "mainViewModel.currentValue: $it")
+                        binding.numberTextview.text = it.toString()
+                    }
+                }
+
+                launch {
+                    mainViewModel.currentUserInput.collect {
+                        DebugLog.d(logTag, "mainViewModel.currentUserInput: $it")
+                        binding.numberInputEdittext.setText(it)
+                    }
+                }
+
+                launch {
+                    mainViewModel.isWorking.collect { isWorking ->
+                        when (isWorking) {
+                            true -> {
+                                binding.loadingBar.visibility = View.VISIBLE
+                            }
+                            false -> {
+                                binding.loadingBar.visibility = View.INVISIBLE
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
         mainViewModel.currentValue.observe(this, Observer {
             DebugLog.d(logTag, "mainViewModel.currentValue 라이브 데이터 값 변경: $it")
             binding.numberTextview.text = it.toString()
@@ -38,6 +71,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             DebugLog.d(logTag, "mainViewModel.currentUserInput 라이브 데이터 값 변경: $changedUserInput")
             binding.numberInputEdittext.setText(changedUserInput)
         })
+         */
 
         // 리스너 연결
         binding.plusBtn.setOnClickListener(this)
