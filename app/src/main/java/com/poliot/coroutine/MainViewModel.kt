@@ -1,15 +1,14 @@
 package com.poliot.coroutine
 
+import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.poliot.coroutine.util.DebugLog
+import com.poliot.coroutine.util.textChangesToFlow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 enum class NumberActionType {
@@ -36,9 +35,19 @@ class MainViewModel: ViewModel() {
     private val _isWorking = MutableSharedFlow<Boolean>()
     val isWorking: SharedFlow<Boolean> = _isWorking
 
+    val currentValueInfo: Flow<String> = _currentValue.map { "현재값: $it" }
+
     init {
         DebugLog.i(logTag, "init-()")
         _currentValue.value = 0 // 초기값 설정
+    }
+
+    fun bindUserInputEditText(editText: EditText) {
+        viewModelScope.launch {
+            editText.textChangesToFlow().collect() {
+                _currentUserInput.value = it.toString()
+            }
+        }
     }
 
     // 뷰모델이 가지고 있는 값을 변경하는 메소드

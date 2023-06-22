@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.*
 import com.poliot.coroutine.databinding.ActivityMainBinding
 import com.poliot.coroutine.util.DebugLog
+import com.poliot.coroutine.util.textChangesToFlow
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 
@@ -30,12 +32,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        lifecycleScope.launch {
+        binding.numberInputEdittext.textChangesToFlow()
+
+        val job = lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    mainViewModel.currentValue.collect {
+                    mainViewModel.currentValueInfo.collect {
                         DebugLog.d(logTag, "mainViewModel.currentValue: $it")
-                        binding.numberTextview.text = it.toString()
+                        binding.numberTextview.text = it
                     }
                 }
 
@@ -58,6 +62,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     }
                 }
+
+                launch {
+                    binding.numberInputEdittext.textChangesToFlow()
+                        .collect() { input ->
+                            DebugLog.d(logTag, "textChangesToFlow: $input")
+                        }
+                }
             }
         }
 
@@ -73,9 +84,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
          */
 
+        mainViewModel.bindUserInputEditText(binding.numberInputEdittext)
+
         // 리스너 연결
         binding.plusBtn.setOnClickListener(this)
         binding.minusBtn.setOnClickListener(this)
+
+
     }
 
     // 액티비티가 파괴될 때
