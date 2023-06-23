@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         // 리스너 연결
         binding.plusBtn.setOnClickListener(this)
         binding.minusBtn.setOnClickListener(this)
+        binding.workBtn.setOnClickListener(this)
 
 
     }
@@ -102,21 +103,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
 
-        val userInputString = binding.numberInputEdittext.text.toString()
-
-        if (userInputString.isEmpty()) {
-            return
-        }
-
-        val userInputNumber = userInputString.toInt()
+//        val userInputString = binding.numberInputEdittext.text.toString()
+//
+//        if (userInputString.isEmpty()) {
+//            return
+//        }
+//
+//        val userInputNumber = userInputString.toInt()
 
         // 뷰모델에 라이브데이터 값을 변경하는 메소드 실행
         when (view) {
             binding.plusBtn -> {
-                mainViewModel.updateValue(NumberActionType.PLUS, userInputNumber)
+                //mainViewModel.updateValue(NumberActionType.PLUS, userInputNumber)
             }
             binding.minusBtn -> {
-                mainViewModel.updateValue(NumberActionType.MINUS, userInputNumber)
+                //mainViewModel.updateValue(NumberActionType.MINUS, userInputNumber)
+            }
+            binding.workBtn -> {
+                mainViewModel.backgroundWork {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }

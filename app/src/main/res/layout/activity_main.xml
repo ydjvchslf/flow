@@ -47,6 +47,15 @@
         android:layout_marginStart="10dp"
         android:text="빼기" />
 
+    <Button
+        android:id="@+id/work_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/plus_btn"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:text="work" />
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loading_bar"
         android:layout_width="150dp"

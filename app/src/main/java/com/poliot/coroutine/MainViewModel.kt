@@ -1,15 +1,13 @@
 package com.poliot.coroutine
 
 import android.widget.EditText
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.poliot.coroutine.util.DebugLog
 import com.poliot.coroutine.util.textChangesToFlow
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
 
 enum class NumberActionType {
     PLUS,
@@ -68,5 +66,32 @@ class MainViewModel: ViewModel() {
             }
         }
         this._currentUserInput.value = ""
+    }
+
+    fun backgroundWork(resultStr: (String) -> Unit) {
+        DebugLog.i(logTag, "backgroundWork-()")
+        viewModelScope.launch(Dispatchers.IO) {
+            _isWorking.emit(true)
+            val time = measureTimeMillis {
+                val answer1 = async { networkCall() }
+                val answer2 = async { networkCall2(answer1) }
+                DebugLog.d(logTag, "Answer1 is ${answer1.await()}")
+                DebugLog.d(logTag, "Answer2 is ${answer2.await()}")
+                resultStr.invoke(answer2.await())
+                _isWorking.emit(false)
+            }
+            DebugLog.d(logTag, "소요시간: $time ms.")
+        }
+    }
+
+    suspend fun networkCall(): String {
+        DebugLog.i(logTag, "networkCall-()")
+        delay(3000)
+        return "My name is"
+    }
+
+    suspend fun networkCall2(input: Deferred<String>): String {
+        DebugLog.i(logTag, "networkCall2-()")
+        return "${input.await()} Mia"
     }
 }
