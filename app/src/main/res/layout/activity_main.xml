@@ -7,66 +7,26 @@
     tools:context=".MainActivity"
     android:background="@color/white">
 
-    <TextView
-        android:id="@+id/number_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="hello world"
-        android:textSize="30dp"/>
+        <!-- 프래그먼트들이 보여질 컨테이너 -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/main_nav_host"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
 
-    <EditText
-        android:id="@+id/number_input_edittext"
-        android:layout_width="200dp"
-        android:layout_height="0dp"
-        android:inputType="number"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/number_textview"
-        app:layout_constraintEnd_toStartOf="@id/plus_btn"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/plus_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/number_input_edittext"
-        app:layout_constraintEnd_toStartOf="@id/minus_btn"
-        app:layout_constraintTop_toBottomOf="@id/number_textview"
-        android:text="더하기" />
-
-    <Button
-        android:id="@+id/minus_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/plus_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/number_textview"
-        android:layout_marginStart="10dp"
-        android:text="빼기" />
-
-    <Button
-        android:id="@+id/work_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/plus_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="10dp"
-        android:text="work" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/loading_bar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:lottie_rawRes="@raw/blue_loading_bar"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        android:visibility="gone"/>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/menu_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
