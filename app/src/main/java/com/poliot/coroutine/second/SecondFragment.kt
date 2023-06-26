@@ -30,4 +30,16 @@ class SecondFragment: Fragment() {
         }
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        DebugLog.i(logTag, "onViewCreated-()")
+
+        binding.getAllBtn.setOnClickListener {
+            secondViewModel.getAllProduct()
+        }
+        binding.getOneBtn.setOnClickListener {
+
+        }
+    }
 }
