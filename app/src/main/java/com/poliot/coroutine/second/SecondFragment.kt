@@ -39,7 +39,10 @@ class SecondFragment: Fragment() {
             secondViewModel.getAllProduct()
         }
         binding.getOneBtn.setOnClickListener {
-
+            val editText = binding.editText.text
+            if (editText.isNullOrEmpty()) { return@setOnClickListener }
+            val id = editText.toString()
+            secondViewModel.getOneProduct(id)
         }
     }
 }

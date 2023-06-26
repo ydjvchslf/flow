@@ -33,4 +33,28 @@ class RemoteDataSource {
             }
         }
     }
+
+    suspend fun getOneProduct(id: String): ProductEntity? {
+        DebugLog.w(logTag, "getOneProduct-()")
+        val response = retrofitService.getSingleProduct(id)
+        return when (response) {
+            is Result.Success -> {
+                DebugLog.i(logTag, "Result Success!!")
+                val remoteProductData = response.data
+                return remoteProductData.toEntity()
+            }
+            is Result.ApiError -> {
+                DebugLog.i(logTag, "ApiError!!")
+                return null
+            }
+            is Result.NetworkError -> {
+                DebugLog.i(logTag, "NetworkError!!")
+                DebugLog.d(logTag, "response.throwable => ${response.throwable}")
+                return null
+            }
+            else -> {
+                null
+            }
+        }
+    }
 }

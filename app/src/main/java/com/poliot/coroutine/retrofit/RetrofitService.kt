@@ -9,5 +9,5 @@ interface RetrofitService {
     suspend fun getProductList(): Result<List<RemoteProductData>>
 
     @GET("products/{id}")
-    suspend fun getSingleProduct(@Path (value = "id") id: Int): Result<RemoteProductData>
+    suspend fun getSingleProduct(@Path (value = "id") id: String): Result<RemoteProductData>
 }
